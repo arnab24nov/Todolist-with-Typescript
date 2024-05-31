@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Header from "./components/Header";
+import Searchbox from "./components/Searchbox";
+import { Todo } from "./components/model";
+import TodoList from "./components/TodoList";
 
 function App() {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [todo, setTodo] = useState<string>("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    todo && setTodos([...todos, { id: Date.now(), todo: todo, isDone: false }]);
+    setTodo("");
+  };
+
+  console.log("app rendered");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className={`${
+        isFocused ? "bg-sky-800" : "bg-sky-400"
+      } md:h-screen font-neucha pb-6`}
+    >
+      <Header />
+      <Searchbox
+        setIsFocused={setIsFocused}
+        todo={todo}
+        setTodo={setTodo}
+        handleSubmit={handleSubmit}
+      />
+      <TodoList todos={todos} setTodos={setTodos} />
     </div>
   );
 }
